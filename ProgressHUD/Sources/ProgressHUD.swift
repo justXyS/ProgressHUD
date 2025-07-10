@@ -11,6 +11,14 @@
 
 import UIKit
 
+fileprivate func syncInMain(_ block: () -> ()) {
+    if Thread.isMainThread {
+        block()
+    } else {
+        DispatchQueue.main.sync(execute: block)
+    }
+}
+
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 public enum AnimationType {
 
@@ -141,19 +149,15 @@ public extension ProgressHUD {
 
 	//-------------------------------------------------------------------------------------------------------------------------------------------
 	class func dismiss() {
-        if Thread.isMainThread {
+        syncInMain {
             shared.hudHide()
-        } else {
-            DispatchQueue.main.sync {
-                shared.hudHide()
-            }
         }
 	}
 
 	//-------------------------------------------------------------------------------------------------------------------------------------------
 	class func show(_ status: String? = nil, interaction: Bool = true) {
 
-		DispatchQueue.main.async {
+        syncInMain {
 			shared.setup(status: status, hide: false, interaction: interaction)
 		}
 	}
@@ -164,7 +168,7 @@ public extension ProgressHUD {
 
 		let image = icon.image?.withTintColor(shared.colorAnimation, renderingMode: .alwaysOriginal)
 
-		DispatchQueue.main.async {
+        syncInMain {
 			shared.setup(status: status, staticImage: image, hide: true, interaction: interaction)
 		}
 	}
@@ -172,7 +176,7 @@ public extension ProgressHUD {
 	//-------------------------------------------------------------------------------------------------------------------------------------------
 	class func show(_ status: String? = nil, icon animatedIcon: AnimatedIcon, interaction: Bool = true) {
 
-		DispatchQueue.main.async {
+        syncInMain {
 			shared.setup(status: status, animatedIcon: animatedIcon, hide: true, interaction: interaction)
 		}
 	}
@@ -181,7 +185,7 @@ public extension ProgressHUD {
 	//-------------------------------------------------------------------------------------------------------------------------------------------
 	class func showSuccess(_ status: String? = nil, image: UIImage? = nil, interaction: Bool = true) {
 
-		DispatchQueue.main.async {
+        syncInMain {
 			shared.setup(status: status, staticImage: image ?? shared.imageSuccess, hide: true, interaction: interaction)
 		}
 	}
@@ -189,7 +193,7 @@ public extension ProgressHUD {
 	//-------------------------------------------------------------------------------------------------------------------------------------------
 	class func showError(_ status: String? = nil, image: UIImage? = nil, interaction: Bool = true) {
 
-		DispatchQueue.main.async {
+        syncInMain {
 			shared.setup(status: status, staticImage: image ?? shared.imageError, hide: true, interaction: interaction)
 		}
 	}
@@ -198,7 +202,7 @@ public extension ProgressHUD {
 	//-------------------------------------------------------------------------------------------------------------------------------------------
 	class func showSucceed(_ status: String? = nil, interaction: Bool = true) {
 
-		DispatchQueue.main.async {
+        syncInMain {
 			shared.setup(status: status, animatedIcon: .succeed, hide: true, interaction: interaction)
 		}
 	}
@@ -206,7 +210,7 @@ public extension ProgressHUD {
 	//-------------------------------------------------------------------------------------------------------------------------------------------
 	class func showFailed(_ status: String? = nil, interaction: Bool = true) {
 
-		DispatchQueue.main.async {
+        syncInMain {
 			shared.setup(status: status, animatedIcon: .failed, hide: true, interaction: interaction)
 		}
 	}
@@ -214,7 +218,7 @@ public extension ProgressHUD {
 	//-------------------------------------------------------------------------------------------------------------------------------------------
 	class func showAdded(_ status: String? = nil, interaction: Bool = true) {
 
-		DispatchQueue.main.async {
+        syncInMain {
 			shared.setup(status: status, animatedIcon: .added, hide: true, interaction: interaction)
 		}
 	}
@@ -223,7 +227,7 @@ public extension ProgressHUD {
 	//-------------------------------------------------------------------------------------------------------------------------------------------
 	class func showProgress(_ progress: CGFloat, interaction: Bool = false) {
 
-		DispatchQueue.main.async {
+        syncInMain {
 			shared.setup(progress: progress, hide: false, interaction: interaction)
 		}
 	}
@@ -231,7 +235,7 @@ public extension ProgressHUD {
 	//-------------------------------------------------------------------------------------------------------------------------------------------
 	class func showProgress(_ status: String?, _ progress: CGFloat, interaction: Bool = false) {
 
-		DispatchQueue.main.async {
+        syncInMain {
 			shared.setup(status: status, progress: progress, hide: false, interaction: interaction)
 		}
 	}
