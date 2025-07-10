@@ -141,10 +141,13 @@ public extension ProgressHUD {
 
 	//-------------------------------------------------------------------------------------------------------------------------------------------
 	class func dismiss() {
-
-		DispatchQueue.main.async {
-			shared.hudHide()
-		}
+        if Thread.isMainThread {
+            shared.hudHide()
+        } else {
+            DispatchQueue.main.sync {
+                shared.hudHide()
+            }
+        }
 	}
 
 	//-------------------------------------------------------------------------------------------------------------------------------------------
@@ -589,13 +592,8 @@ public class ProgressHUD: UIView {
 	private func hudHide() {
 
 		if (self.alpha == 1) {
-			UIView.animate(withDuration: 0.15, delay: 0, options: [.allowUserInteraction, .curveEaseIn], animations: {
-				self.toolbarHUD?.transform = CGAffineTransform(scaleX: 0.3, y: 0.3)
-				self.toolbarHUD?.alpha = 0
-			}, completion: { isFinished in
-				self.hudDestroy()
-				self.alpha = 0
-			})
+            self.hudDestroy()
+            self.alpha = 0
 		}
 	}
 
