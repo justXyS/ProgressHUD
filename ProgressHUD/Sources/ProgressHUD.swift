@@ -1094,9 +1094,9 @@ public class ProgressHUD: UIView {
 		layer.lineJoin = .round
 		layer.strokeEnd = 0
 
-		layer.add(animation, forKey: "animation")
+        view.layer.addSublayer(layer)
         animation.beginTime = layer.convertTime(animation.beginTime, from: nil)
-		view.layer.addSublayer(layer)
+        layer.add(animation, forKey: "animation")
 	}
 
 	//-------------------------------------------------------------------------------------------------------------------------------------------
@@ -1135,8 +1135,9 @@ public class ProgressHUD: UIView {
 
 			animation.beginTime = CACurrentMediaTime() + 0.25 * Double(i) + delay
 
-			layer.add(animation, forKey: "animation")
-			view.layer.addSublayer(layer)
+            view.layer.addSublayer(layer)
+            animation.beginTime = layer.convertTime(animation.beginTime, from: nil)
+            layer.add(animation, forKey: "animation")
 		}
 	}
 
