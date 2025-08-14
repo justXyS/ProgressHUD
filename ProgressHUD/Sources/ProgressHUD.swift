@@ -1084,6 +1084,7 @@ public class ProgressHUD: UIView {
 		animation.fillMode = .forwards
 		animation.isRemovedOnCompletion = false
 		animation.beginTime = CACurrentMediaTime() + delay
+        animation.beginTime = layer.convertTime(animation.beginTime, from: nil)
 
 		let layer = CAShapeLayer()
 		layer.path = path.cgPath
